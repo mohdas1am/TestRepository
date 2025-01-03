@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Photo Cube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            overflow: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(62, 84, 172, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(114, 95, 185, 0.2) 0%, transparent 40%);
+            animation: backgroundShift 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .scene {
+            width: 300px;
+            height: 300px;
+            perspective: 1200px;
+            cursor: move;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s;
+            animation: floatCube 6s ease-in-out infinite;
+        }
+
+        @keyframes floatCube {
+            0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-20px) rotateX(5deg) rotateY(5deg); }
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background-size: cover;
+            background-position: center;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.5),
+                0 0 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .cube-face::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.1) 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.1) 75%,
+                rgba(255, 255, 255, 0.2) 100%
+            );
+            transition: all 0.5s;
+        }
+
+        .cube-face::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+        }
+
+        .cube-face.front  { transform: rotateY(0deg) translateZ(150px); }
+        .cube-face.back   { transform: rotateY(180deg) translateZ(150px); }
+        .cube-face.left   { transform: rotateY(-90deg) translateZ(150px); }
+        .cube-face.right  { transform: rotateY(90deg) translateZ(150px); }
+        .cube-face.top    { transform: rotateX(90deg) translateZ(150px); }
+        .cube-face.bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        .cube-face:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                inset 0 0 60px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .cube-face:hover::before {
+            transform: translateX(100%) rotate(45deg);
+            transition: all 0.8s;
+        }
+
+        .scene::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 100px;
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: blur(20px);
+            animation: shadowPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes shadowPulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.4; }
+            50% { transform: translateX(-50%) scale(0.8); opacity: 0.2; }
+        }
+
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <div class="glow"></div>
+        <div class="cube">
+            <div class="cube-face front" style="background-image: url('/api/placeholder/300/300?text=Mountain Lake')"></div>
+            <div class="cube-face back" style="background-image: url('/api/placeholder/300/300?text=City Sunset')"></div>
+            <div class="cube-face left" style="background-image: url('/api/placeholder/300/300?text=Forest Path')"></div>
+            <div class="cube-face right" style="background-image: url('/api/placeholder/300/300?text=Ocean View')"></div>
+            <div class="cube-face top" style="background-image: url('/api/placeholder/300/300?text=Starry Sky')"></div>
+            <div class="cube-face bottom" style="background-image: url('/api/placeholder/300/300?text=Desert Sand')"></div>
+        </div>
+    </div>
+
+    <script>
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xRotation = 0;
+        let yRotation = 0;
+        let momentum = { x: 0, y: 0 };
+        let lastTime = null;
+
+        const cube = document.querySelector('.cube');
+        const scene = document.querySelector('.scene');
+
+        scene.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+
+        scene.addEventListener('touchstart', dragStart);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('touchend', dragEnd);
+
+        function dragStart(e) {
+            cube.style.animation = 'none';
+            if (e.type === "mousedown") {
+                initialX = e.clientX;
+                initialY = e.clientY;
+            } else {
+                initialX = e.touches[0].clientX;
+                initialY = e.touches[0].clientY;
+            }
+            isDragging = true;
+            lastTime = Date.now();
+            momentum = { x: 0, y: 0 };
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            if (e.type === "mousemove") {
+                currentX = e.clientX;
+                currentY = e.clientY;
+            } else {
+                currentX = e.touches[0].clientX;
+                currentY = e.touches[0].clientY;
+            }
+
+            const diffX = currentX - initialX;
+            const diffY = currentY - initialY;
+
+            momentum.x = diffX / deltaTime;
+            momentum.y = diffY / deltaTime;
+
+            yRotation += diffX * 0.5;
+            xRotation -= diffY * 0.5;
+
+            updateCubeRotation();
+
+            initialX = currentX;
+            initialY = currentY;
+        }
+
+        function dragEnd() {
+            isDragging = false;
+            let inertia = setInterval(() => {
+                if (Math.abs(momentum.x) < 0.01 && Math.abs(momentum.y) < 0.01) {
+                    clearInterval(inertia);
+                    return;
+                }
+
+                yRotation += momentum.x * 10;
+                xRotation -= momentum.y * 10;
+
+                momentum.x *= 0.95;
+                momentum.y *= 0.95;
+
+                updateCubeRotation();
+            }, 16);
+        }
+
+        function updateCubeRotation() {
+            cube.style.transform = `rotateX(${xRotation}deg) rotateY(${yRotation}deg)`;
+        }
+    </script>
+</body>
+</html>
